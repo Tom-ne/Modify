@@ -5,6 +5,7 @@ use tokio;
 
 mod commands {
     pub mod search;
+    pub mod install;
 }
 
 fn print_menu() {
@@ -32,5 +33,7 @@ async fn main() {
         println!("Exiting...");
     } else if input == "sS" {
         commands::search::run().await;
+    } else if input == "S" {
+        commands::install::run().await;
     }
 }
