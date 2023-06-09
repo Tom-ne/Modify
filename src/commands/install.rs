@@ -1,4 +1,3 @@
-use crate::constants::CONFIG_FILE_PATH;
 use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
 use crate::lib::mod_manager::command::Command;
 use crate::lib::mod_manager::config_helper::read_config;

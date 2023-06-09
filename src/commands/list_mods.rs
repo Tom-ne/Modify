@@ -3,7 +3,6 @@ use std::fs;
 use async_trait::async_trait;
 
 use crate::{
-    constants::CONFIG_FILE_PATH,
     lib::mod_manager::{command::Command, config_helper::read_config},
 };
 
