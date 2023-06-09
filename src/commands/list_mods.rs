@@ -12,7 +12,7 @@ pub struct ListCommand;
 #[async_trait]
 impl Command for ListCommand {
     async fn run(&self) {
-        let dir_path = read_config(CONFIG_FILE_PATH).unwrap().mc_mod_dir;
+        let dir_path = read_config().unwrap().mc_mod_dir;
 
         if let Ok(entries) = fs::read_dir(dir_path) {
             for entry in entries {

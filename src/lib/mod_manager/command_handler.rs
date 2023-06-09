@@ -2,7 +2,7 @@ use crate::{
     commands::{
         edit_config::EditConfigCommand, help::HelpCommand, install::InstallCommand,
         list_mods::ListCommand, print_config::PrintConfigCommand, quit::QuitCommand,
-        search::SearchCommand,
+        search::SearchCommand, uninstall::UninstallCommand,
     },
     lib::io::io_helper::print_middle,
 };
@@ -15,6 +15,7 @@ pub(crate) fn create_command_handler() -> IndexMap<&'static str, Box<dyn Command
     let mut dispatcher: IndexMap<&'static str, Box<dyn Command>> = IndexMap::new();
     dispatcher.insert("sS", Box::new(SearchCommand));
     dispatcher.insert("S", Box::new(InstallCommand));
+    dispatcher.insert("R", Box::new(UninstallCommand));
     dispatcher.insert("pconfig", Box::new(PrintConfigCommand));
     dispatcher.insert("config", Box::new(EditConfigCommand));
     dispatcher.insert("l", Box::new(ListCommand));

@@ -13,7 +13,7 @@ pub struct PrintConfigCommand;
 impl Command for PrintConfigCommand {
     async fn run(&self) {
         let config_path = CONFIG_FILE_PATH;
-        let settings: ModManagerSettings = read_config(config_path).unwrap();
+        let settings: ModManagerSettings = read_config().unwrap();
 
         ModManagerSettings::print(settings);
     }

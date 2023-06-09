@@ -25,7 +25,7 @@ async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error>
             .await
             .map_err(|err| Error::new(ErrorKind::Other, format!("Request failed: {:?}", err)))?;
 
-        let config = read_config(CONFIG_FILE_PATH).unwrap();
+        let config = read_config().unwrap();
 
         let file_name = format!(
             "{}/{}-{}.jar",
@@ -65,7 +65,7 @@ impl Command for InstallCommand {
         print!("Enter mod to install: ");
         flush_output_stream();
         let input = get_user_input().to_lowercase();
-        let mc_version = read_config(CONFIG_FILE_PATH)
+        let mc_version = read_config()
             .unwrap()
             .minecraft_data
             .version;

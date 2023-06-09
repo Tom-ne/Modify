@@ -28,7 +28,7 @@ fn print_menu() {
 impl Command for EditConfigCommand {
     async fn run(&self) {
         let config_path = CONFIG_FILE_PATH;
-        let mut settings = read_config(config_path).unwrap();
+        let mut settings = read_config().unwrap();
 
         print_menu();
         println!("What would you like to edit?");

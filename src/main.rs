@@ -35,6 +35,7 @@ mod commands {
     pub mod print_config;
     pub mod quit;
     pub mod search;
+    pub mod uninstall;
 }
 
 #[tokio::main] // Use the tokio runtime
