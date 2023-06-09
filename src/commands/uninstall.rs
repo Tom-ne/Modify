@@ -22,6 +22,9 @@ fn get_mods_in_directory(dir_path: &str) -> Vec<String> {
         }
     }
 
+    // Sort the mods in descending order by length
+    mods.sort_by(|a, b| a.len().cmp(&b.len()));
+
     mods
 }
 
@@ -41,6 +44,7 @@ impl Command for UninstallCommand {
                     Ok(()) => println!("File removed successfully"),
                     Err(err) => println!("Failed to remove file: {}", err),
                 }
+                break;
             }
         }
     }
