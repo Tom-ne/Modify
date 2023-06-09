@@ -1,6 +1,6 @@
 use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
-use crate::lib::mod_manager::command::Command;
-use crate::lib::mod_manager::config_helper::read_config;
+use crate::lib::modify::command::Command;
+use crate::lib::modify::config_helper::read_config;
 use crate::lib::modrinth::get_project::get_project;
 use crate::lib::modrinth::get_versions::get_mod_versions;
 use async_trait::async_trait;
@@ -28,7 +28,9 @@ async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error>
 
         let file_name = format!(
             "{}/{}-{}.jar",
-            config.mc_mod_dir, binding, mod_version.minecraft_version
+            config.mc_mod_dir,
+            binding.replace("-", "_"),
+            mod_version.minecraft_version
         );
         let mut file = File::create(file_name).await?;
         let mut content = response.bytes().await.map_err(|err| {
@@ -64,10 +66,7 @@ impl Command for InstallCommand {
         print!("Enter mod to install: ");
         flush_output_stream();
         let input = get_user_input().to_lowercase();
-        let mc_version = read_config()
-            .unwrap()
-            .minecraft_data
-            .version;
+        let mc_version = read_config().unwrap().minecraft_data.version;
 
         println!("Installing {} for Minecraft version {}.", input, mc_version);
 

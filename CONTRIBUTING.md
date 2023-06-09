@@ -1,10 +1,10 @@
 # Contributing Guidelines
 
-Thank you for considering contributing to the Rust Minecraft Mod Manager project! We appreciate your interest and value the contributions of the community. By following these guidelines, you can help us maintain a collaborative and welcoming environment for everyone.
+Thank you for considering contributing to the Modify project! We appreciate your interest and value the contributions of the community. By following these guidelines, you can help us maintain a collaborative and welcoming environment for everyone.
 
 ## How to Contribute
 
-To contribute to the Rust Minecraft Mod Manager project, please follow these steps:
+To contribute to the Modify project, please follow these steps:
 
 1. Fork the repository on GitHub to create your own copy.
 2. Clone the forked repository to your local machine.
@@ -48,4 +48,4 @@ To ensure a smooth and efficient contribution process, please adhere to the foll
 
 If you have any questions or need further assistance, feel free to contact the project maintainer at [email protected].
 
-Once again, thank you for your interest in contributing to the Rust Minecraft Mod Manager project. We appreciate your efforts and look forward to your contributions!
+Once again, thank you for your interest in contributing to the Modify project. We appreciate your efforts and look forward to your contributions!

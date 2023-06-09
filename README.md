@@ -1,6 +1,6 @@
-# Minecraft Mod Manager
+# Modify
 
-The Rust Minecraft Mod Manager is a command-line tool written in Rust that provides an easy and efficient way to manage mods for the Minecraft game. It simplifies the process of installing, removing, and updating mods, allowing Minecraft players to enhance their gameplay experience with ease.
+Modify is a command-line tool written in Rust that provides an easy and efficient way to manage mods for the Minecraft game. It simplifies the process of installing, removing, and updating mods, allowing Minecraft players to enhance their gameplay experience with ease.
 
 ## Features
 
@@ -23,7 +23,7 @@ The Rust Minecraft Mod Manager is a command-line tool written in Rust that provi
 
 ### Steps
 
-1. Clone or download the Minecraft Mod Manager repository from [GitHub](https://github.com/TomNe/mod-manager).
+1. Clone or download Modify repository from [GitHub](https://github.com/TomNe/mod-manager).
 2. Open a terminal or command prompt and navigate to the project's directory.
 3. Build the project using the following command:
 
@@ -37,20 +37,20 @@ The Rust Minecraft Mod Manager is a command-line tool written in Rust that provi
 ## Usage
 
 1. Open a terminal or command prompt.
-2. Navigate to the directory where the Minecraft Mod Manager executable is located.
-3. Run the following command to start the mod manager:
+2. Navigate to the directory where the Modify executable is located.
+3. Run the following command to start Modify:
 
    ```shell
    ./mod-manager
    ```
 
-4. The mod manager will launch, and you can begin managing your mods using the available commands.
-5. Follow the instructions provided by the mod manager to install, remove, or update mods.
+4. Modify will launch, and you can begin managing your mods using the available commands.
+5. Follow the instructions provided by Modify to install, remove, or update mods.
 6. Enjoy playing Minecraft with your favorite mods!
 
 ## Contributing
 
-Contributions to the Rust Minecraft Mod Manager project are welcome! If you would like to contribute, please follow these steps:
+Contributions to the Modify project are welcome! If you would like to contribute, please follow these steps:
 
 1. Fork the repository and clone it to your local machine.
 2. Create a new branch for your feature or bug fix.
@@ -71,4 +71,4 @@ This project is licensed under the [MIT License](LICENSE). Feel free to use, mod
 - The Rust programming language and its community for providing a powerful and reliable development environment.
 - The Minecraft modding community for their incredible creations and continuous inspiration.
 
-Enjoy modding your Minecraft game with the Rust Minecraft Mod Manager!
+Enjoy modding your Minecraft game with Modify!

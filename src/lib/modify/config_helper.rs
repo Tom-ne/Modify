@@ -6,14 +6,13 @@ use std::{
 
 use crate::constants::CONFIG_FILE_PATH;
 
-use super::mod_manager_settings::{MCData, ModLoader, ModManagerSettings};
+use super::modify_settings::{ModManagerSettings, MCData, ModLoader};
 
 fn file_exists(path: &str) -> bool {
     let file_path = Path::new(path);
     file_path.exists()
 }
 
-// pub(crate) fn read_config(path: &str) -> io::Result<ModManagerSettings> {
 pub(crate) fn read_config() -> io::Result<ModManagerSettings> {
     let path = CONFIG_FILE_PATH;
     if !file_exists(path) {

@@ -3,7 +3,7 @@ use serde_json::{Error, Value};
 
 use crate::lib::{
     io::io_helper::{flush_output_stream, get_user_input, print_middle},
-    mod_manager::command::Command,
+    modify::command::Command,
     modrinth::search_req::search_mod,
 };
 

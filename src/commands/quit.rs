@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 
-use crate::lib::mod_manager::command::Command;
+use crate::lib::modify::command::Command;
 
 pub struct QuitCommand;
 

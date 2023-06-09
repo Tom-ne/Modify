@@ -1,9 +1,7 @@
 use async_trait::async_trait;
 
-use crate::{
-    lib::mod_manager::{
-        command::Command, config_helper::read_config, mod_manager_settings::ModManagerSettings,
-    },
+use crate::lib::modify::{
+    command::Command, config_helper::read_config, modify_settings::ModManagerSettings,
 };
 
 pub struct PrintConfigCommand;

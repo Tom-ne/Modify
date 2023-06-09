@@ -45,7 +45,7 @@ impl ModManagerSettings {
 
     pub fn print(settings: ModManagerSettings) {
         let separator = "==============================================";
-        let title = "Mod Manager config";
+        let title = "Modify config";
         print_middle(separator, title);
         println!("• Minecraft Mods directory: {}", settings.mc_mod_dir);
         println!("• Minecraft Version: {}", settings.minecraft_data.version);

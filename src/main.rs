@@ -1,9 +1,7 @@
-use lib::io::io_helper::clear;
-use lib::mod_manager::command_handler::print_help_menu;
+use lib::{io::io_helper::clear, modify::command_handler::{print_help_menu, create_command_handler}};
 use tokio;
 
 use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
-use crate::lib::mod_manager::command_handler::create_command_handler;
 
 mod constants;
 
@@ -12,11 +10,11 @@ mod lib {
         pub mod io_helper;
     }
 
-    pub mod mod_manager {
+    pub mod modify {
         pub mod command;
         pub mod command_handler;
         pub mod config_helper;
-        pub mod mod_manager_settings;
+        pub mod modify_settings;
     }
 
     pub mod modrinth {

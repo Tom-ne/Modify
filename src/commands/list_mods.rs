@@ -2,9 +2,7 @@ use std::fs;
 
 use async_trait::async_trait;
 
-use crate::{
-    lib::mod_manager::{command::Command, config_helper::read_config},
-};
+use crate::lib::modify::{command::Command, config_helper::read_config};
 
 pub struct ListCommand;
 

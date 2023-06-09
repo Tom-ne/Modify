@@ -4,10 +4,10 @@ use crate::{
     constants::CONFIG_FILE_PATH,
     lib::{
         io::io_helper::{flush_output_stream, get_user_input, print_middle},
-        mod_manager::{
+        modify::{
             command::Command,
             config_helper::{read_config, write_config},
-            mod_manager_settings::{ModLoader, ModManagerSettings},
+            modify_settings::{ModLoader, ModManagerSettings},
         },
     },
 };
@@ -16,7 +16,7 @@ pub struct EditConfigCommand;
 
 fn print_menu() {
     let separator = "==============================================";
-    let title = "Mod Manager config Editor";
+    let title = "Modify config Editor";
     print_middle(separator, title);
     println!("• mdir - Mods directory path");
     println!("• mc_version - Minecraft version");

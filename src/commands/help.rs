@@ -1,6 +1,6 @@
 use async_trait::async_trait;
 
-use crate::lib::mod_manager::{command::Command, command_handler::print_help_menu};
+use crate::lib::modify::{command::Command, command_handler::print_help_menu};
 
 pub struct HelpCommand;
 

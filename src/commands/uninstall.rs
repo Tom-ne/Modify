@@ -4,7 +4,7 @@ use async_trait::async_trait;
 
 use crate::lib::{
     io::io_helper::get_user_input,
-    mod_manager::{command::Command, config_helper::read_config},
+    modify::{command::Command, config_helper::read_config},
 };
 
 pub struct UninstallCommand;
