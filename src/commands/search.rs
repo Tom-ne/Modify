@@ -1,15 +1,16 @@
+use async_trait::async_trait;
 use serde_json::{Value, Error};
 
-use crate::{
-    input_helper::{flush_output_stream, get_user_input},
-    api::make_request,
-};
+use crate::lib::{modrinth::search_req::search_mod, io::io_helper::{print_middle, flush_output_stream, get_user_input}, mod_manager::command::Command};
+
+pub struct SearchCommand;
 
 fn print_mod_info(json_str: &str) -> Result<(), Error> {
     let json: Value = serde_json::from_str(json_str)?;
 
     if let Some(hits) = json["hits"].as_array() {
         for hit in hits {
+            let slug = hit["slug"].as_str().unwrap_or("");
             let title = hit["title"].as_str().unwrap_or("");
             let description = hit["description"].as_str().unwrap_or("");
             let project_type = hit["project_type"].as_str().unwrap_or("");
@@ -22,17 +23,9 @@ fn print_mod_info(json_str: &str) -> Result<(), Error> {
                 .unwrap_or_else(Vec::new);
 
             let separator = "==============================================";
-            println!("{}", separator);
-
-            // Calculate the spacing to center the title
-            let separator_length = separator.chars().count();
-            let title_length = title.chars().count();
-            let left_spacing = (separator_length - title_length) / 2;
-            let right_spacing = separator_length - title_length - left_spacing;
-
-            println!("{}{}{}", " ".repeat(left_spacing), title, " ".repeat(right_spacing));
-            println!("{}", separator);
+            print_middle(separator, title);
             println!("• {}", description);
+            println!("• Slug: {}", slug);
             println!("• Type: {}", project_type);
             println!("• Client side: {}", client_side);
             println!("• Server side: {}", server_side);
@@ -43,25 +36,23 @@ fn print_mod_info(json_str: &str) -> Result<(), Error> {
     Ok(())
 }
 
-pub(crate) async fn run() {
-    print!("Enter mod to search for: ");
-    flush_output_stream();
-    let input = get_user_input();
-    let req = format!("https://api.modrinth.com/v2/search?query={}", input);
-    let headers = String::new();
 
-    match make_request(req, headers).await {
-        Ok(json) => {
-            if let Ok(pretty_json) = serde_json::to_string_pretty(&json) {
+#[async_trait]
+impl Command for SearchCommand {
+    async fn run(&self) {
+        print!("Enter mod to search for: ");
+        flush_output_stream();
+        let input = get_user_input();
+    
+        match search_mod(&input).await {
+            Ok(pretty_json) => {
                 if let Err(err) = print_mod_info(&pretty_json) {
                     eprintln!("Error: {:?}", err);
                 }
-            } else {
-                println!("Failed to format JSON");
+            },
+            Err(err) => {
+                eprintln!("Error: {:?}", err);
             }
-        },
-        Err(err) => {
-            eprintln!("Error: {:?}", err)
         }
     }
 }

@@ -1,6 +1,7 @@
 use reqwest::Client;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
-use serde_json::Result as JsonResult;
+use serde_json::{Result as JsonResult};
+
 
 pub(crate) async fn make_request(req: String, headers: String) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
     let client = Client::new();
