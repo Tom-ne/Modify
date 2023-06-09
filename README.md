@@ -1,4 +1,4 @@
-# Rust Minecraft Mod Manager
+# Minecraft Mod Manager
 
 The Rust Minecraft Mod Manager is a command-line tool written in Rust that provides an easy and efficient way to manage mods for the Minecraft game. It simplifies the process of installing, removing, and updating mods, allowing Minecraft players to enhance their gameplay experience with ease.
 
