@@ -1,12 +1,13 @@
 use serde::{Deserialize, Serialize};
 
-use crate::lib::io_helper::print_middle;
+use crate::lib::io::io_helper::print_middle;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ModLoader {
     Fabric,
     Forge,
     Quilt,
+    None
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -28,7 +29,7 @@ impl ModLoader {
             0 => Some(ModLoader::Fabric),
             1 => Some(ModLoader::Forge),
             2 => Some(ModLoader::Quilt),
-            _ => None
+            _ => Some(ModLoader::None),
         }
     }
 }

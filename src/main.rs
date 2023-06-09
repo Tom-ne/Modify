@@ -1,12 +1,23 @@
-use lib::io_helper::get_user_input;
+use lib::io::io_helper::clear;
 use tokio;
 
-use crate::lib::io_helper::{flush_output_stream, clear};
+use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
+use crate::lib::mod_manager::command_handler::create_command_handler;
 
+
+mod constants;
 mod lib {
-    pub mod io_helper;
-    pub mod config_helper;
-    pub mod mod_manager_settings;
+    pub mod io {
+        pub mod io_helper;
+    }
+
+    pub mod mod_manager {
+        pub mod config_helper;
+        pub mod mod_manager_settings;
+        pub mod command;
+        pub mod command_handler;
+    }
+
     pub mod modrinth {
         pub mod request_handler;
         pub mod get_project;
@@ -43,22 +54,19 @@ async fn main() {
     clear();
     print_menu();
 
+    let command_handler = create_command_handler();
+
     let mut input = String::new();
 
     while input != "q" {
         print!("Please enter your selection: ");
         flush_output_stream();
         input = get_user_input();
-        if input == "sS" {
-            commands::search::run().await;
-        } else if input == "S" {
-            commands::install::run().await;
-        } else if input == "pconfig" {
-            commands::print_config::run().await;
-        } else if input == "config" {
-            commands::edit_config::run().await;
+
+        if let Some(command) = command_handler.get(input.as_str()) {
+            command.run().await;
         } else if input == "q" {
-            
+
         } else {
             println!("Invalid command!");
         }

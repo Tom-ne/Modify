@@ -1,11 +1,16 @@
+use async_trait::async_trait;
 use serde_json::Value;
 use std::io::{self, Error, ErrorKind};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
-use crate::lib::config_helper::read_config;
-use crate::lib::io_helper::{flush_output_stream, get_user_input};
+use crate::lib::io::io_helper::{get_user_input, flush_output_stream};
+use crate::lib::mod_manager::command::Command;
+use crate::lib::mod_manager::config_helper::read_config;
 use crate::lib::modrinth::get_project::get_project;
 use crate::lib::modrinth::get_versions::get_mod_versions;
+use crate::constants::CONFIG_FILE_PATH;
+
+pub struct InstallCommand;
 
 async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error> {
     let json: Value = serde_json::from_str(json_str)?;
@@ -17,7 +22,7 @@ async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error>
             .await
             .map_err(|err| Error::new(ErrorKind::Other, format!("Request failed: {:?}", err)))?;
 
-        let config = read_config("config.json").unwrap();
+        let config = read_config(CONFIG_FILE_PATH).unwrap();
 
         let file_name = format!("{}/{}_{}.jar", config.mc_mod_dir, binding, mod_version.minecraft_version);
         let mut file = File::create(file_name).await?;
@@ -37,26 +42,29 @@ async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error>
     Ok(())
 }
 
-pub(crate) async fn run() {
-    print!("Enter mod to install: ");
-    flush_output_stream();
-    let input = get_user_input().to_lowercase();
-    let mc_version = read_config("config.json").unwrap().minecraft_data.version;
-
-    println!("Installing {} for Minecraft version {}.", input, mc_version);
-
-    match get_project(&input).await {
-        Ok(json) => {
-            if let Ok(pretty_json) = serde_json::to_string_pretty(&json) {
-                if let Err(err) = download_mod(&pretty_json, &mc_version).await {
-                    eprintln!("Error: {:?}", err);
+#[async_trait]
+impl Command for InstallCommand {
+    async fn run(&self) {
+        print!("Enter mod to install: ");
+        flush_output_stream();
+        let input = get_user_input().to_lowercase();
+        let mc_version = read_config(CONFIG_FILE_PATH).unwrap().minecraft_data.version;
+    
+        println!("Installing {} for Minecraft version {}.", input, mc_version);
+    
+        match get_project(&input).await {
+            Ok(json) => {
+                if let Ok(pretty_json) = serde_json::to_string_pretty(&json) {
+                    if let Err(err) = download_mod(&pretty_json, &mc_version).await {
+                        eprintln!("Error: {:?}", err);
+                    }
+                } else {
+                    println!("Failed to format JSON");
                 }
-            } else {
-                println!("Failed to format JSON");
             }
-        }
-        Err(err) => {
-            eprintln!("Error: {:?}", err);
+            Err(err) => {
+                eprintln!("Error: {:?}", err);
+            }
         }
     }
 }
