@@ -23,7 +23,7 @@ fn get_dep_name(input: &str) -> Option<&str> {
             started = true;
             start_index = idx;
         } else if started && c.is_digit(10) {
-            return Some(&input[start_index..idx-1]);
+            return Some(&input[start_index..idx - 1]);
         }
     }
 
