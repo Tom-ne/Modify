@@ -28,7 +28,6 @@ fn parse_headers(headers: Option<&str>) -> HeaderMap {
 
     // Set default User-Agent header
     let user_agent: HeaderName = "User-Agent".parse().unwrap();
-    // let user_agent_value: HeaderValue = "mod_manager".parse().unwrap();
     let user_agent_value: HeaderValue = env!("CARGO_PKG_NAME").parse().unwrap();
     header_map.insert(user_agent.clone(), user_agent_value);
 
