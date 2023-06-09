@@ -4,7 +4,7 @@ The Rust Minecraft Mod Manager is a command-line tool written in Rust that provi
 
 ## Features
 
-- Mod installation: Easily install mods from various sources, including mod repositories or local files.
+- Mod installation: Easily install mods from Modrinth.
 - Mod removal: Uninstall mods that are no longer needed or desired.
 - Mod updating: Keep your installed mods up to date with the latest versions available.
 - Mod search: Search for mods based on keywords, categories, or tags.
