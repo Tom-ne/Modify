@@ -6,6 +6,7 @@ use crate::lib::mod_manager::command_handler::create_command_handler;
 
 
 mod constants;
+
 mod lib {
     pub mod io {
         pub mod io_helper;
@@ -26,13 +27,13 @@ mod lib {
     }
 }
 
-
 mod commands {
     pub mod search;
     pub mod install;
     pub mod edit_config;
     pub mod print_config;
 }
+
 
 fn print_menu() {
     println!("==============================================");
