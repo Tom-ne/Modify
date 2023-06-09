@@ -7,7 +7,7 @@ pub enum ModLoader {
     Fabric,
     Forge,
     Quilt,
-    None
+    None,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -53,4 +53,3 @@ impl ModManagerSettings {
         println!("• Multi MC directory: {:?}", settings.multi_mc_dir);
     }
 }
-

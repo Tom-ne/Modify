@@ -1,9 +1,9 @@
 use lib::io::io_helper::clear;
+use lib::mod_manager::command_handler::print_help_menu;
 use tokio;
 
 use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
 use crate::lib::mod_manager::command_handler::create_command_handler;
-
 
 mod constants;
 
@@ -13,47 +13,34 @@ mod lib {
     }
 
     pub mod mod_manager {
-        pub mod config_helper;
-        pub mod mod_manager_settings;
         pub mod command;
         pub mod command_handler;
+        pub mod config_helper;
+        pub mod mod_manager_settings;
     }
 
     pub mod modrinth {
-        pub mod request_handler;
         pub mod get_project;
-        pub mod search_req;
         pub mod get_versions;
+        pub mod request_handler;
+        pub mod search_req;
     }
 }
 
 mod commands {
-    pub mod search;
-    pub mod install;
     pub mod edit_config;
+    pub mod help;
+    pub mod install;
+    pub mod list_mods;
     pub mod print_config;
-}
-
-
-fn print_menu() {
-    println!("==============================================");
-    println!("\t\tMod Manager {}", env!("CARGO_PKG_VERSION"));
-    println!("==============================================");
-    println!("• pconfig - print current Mod Manager configuration");
-    println!("• config - configure Mod Manager");
-    println!("• v - set Minecraft version");
-    println!("• Syu - update all mods");
-    println!("• S - install mods");
-    println!("• sS - search for mods");
-    println!("• l - list all mods");
-    println!("• h - prints this menu");
-    println!("• q - quits the program");
+    pub mod quit;
+    pub mod search;
 }
 
 #[tokio::main] // Use the tokio runtime
 async fn main() {
     clear();
-    print_menu();
+    print_help_menu();
 
     let command_handler = create_command_handler();
 
@@ -66,8 +53,6 @@ async fn main() {
 
         if let Some(command) = command_handler.get(input.as_str()) {
             command.run().await;
-        } else if input == "q" {
-
         } else {
             println!("Invalid command!");
         }

@@ -1,7 +1,11 @@
 use async_trait::async_trait;
-use serde_json::{Value, Error};
+use serde_json::{Error, Value};
 
-use crate::lib::{modrinth::search_req::search_mod, io::io_helper::{print_middle, flush_output_stream, get_user_input}, mod_manager::command::Command};
+use crate::lib::{
+    io::io_helper::{flush_output_stream, get_user_input, print_middle},
+    mod_manager::command::Command,
+    modrinth::search_req::search_mod,
+};
 
 pub struct SearchCommand;
 
@@ -19,7 +23,11 @@ fn print_mod_info(json_str: &str) -> Result<(), Error> {
 
             let versions = hit["versions"]
                 .as_array()
-                .map(|v| v.iter().map(|version| version.as_str().unwrap_or("")).collect::<Vec<&str>>())
+                .map(|v| {
+                    v.iter()
+                        .map(|version| version.as_str().unwrap_or(""))
+                        .collect::<Vec<&str>>()
+                })
                 .unwrap_or_else(Vec::new);
 
             let separator = "==============================================";
@@ -36,23 +44,26 @@ fn print_mod_info(json_str: &str) -> Result<(), Error> {
     Ok(())
 }
 
-
 #[async_trait]
 impl Command for SearchCommand {
     async fn run(&self) {
         print!("Enter mod to search for: ");
         flush_output_stream();
         let input = get_user_input();
-    
+
         match search_mod(&input).await {
             Ok(pretty_json) => {
                 if let Err(err) = print_mod_info(&pretty_json) {
                     eprintln!("Error: {:?}", err);
                 }
-            },
+            }
             Err(err) => {
                 eprintln!("Error: {:?}", err);
             }
         }
+    }
+
+    fn description(&self) -> &str {
+        "search for mods"
     }
 }

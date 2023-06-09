@@ -4,7 +4,7 @@ use std::{
     path::Path,
 };
 
-use super::mod_manager_settings::{ModManagerSettings, MCData, ModLoader};
+use super::mod_manager_settings::{MCData, ModLoader, ModManagerSettings};
 
 fn file_exists(path: &str) -> bool {
     let file_path = Path::new(path);

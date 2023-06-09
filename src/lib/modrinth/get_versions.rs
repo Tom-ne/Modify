@@ -41,17 +41,15 @@ pub(crate) async fn get_mod_versions(mod_name: &str) -> Result<Vec<ModVersion>, 
     let req = format!("https://api.modrinth.com/v2/project/{}/version", mod_name);
     let headers = String::new();
 
-    let json = make_request(req, headers).await.map_err(|err| {
-        io::Error::new(io::ErrorKind::Other, format!("Error: {:?}", err))
-    })?;
+    let json = make_request(req, headers)
+        .await
+        .map_err(|err| io::Error::new(io::ErrorKind::Other, format!("Error: {:?}", err)))?;
 
-    let pretty_json = serde_json::to_string_pretty(&json).map_err(|_| {
-        io::Error::new(io::ErrorKind::Other, "Failed to format JSON")
-    })?;
+    let pretty_json = serde_json::to_string_pretty(&json)
+        .map_err(|_| io::Error::new(io::ErrorKind::Other, "Failed to format JSON"))?;
 
-    let value = serde_json::from_str(&pretty_json).map_err(|_| {
-        io::Error::new(io::ErrorKind::Other, "Failed to parse JSON")
-    })?;
+    let value = serde_json::from_str(&pretty_json)
+        .map_err(|_| io::Error::new(io::ErrorKind::Other, "Failed to parse JSON"))?;
 
     let mod_versions = list_versions(&value).await?;
     Ok(mod_versions)

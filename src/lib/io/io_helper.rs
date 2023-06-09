@@ -1,4 +1,4 @@
-use std::io::{self, Write, stdout};
+use std::io::{self, stdout, Write};
 
 use termion::clear;
 
@@ -30,6 +30,11 @@ pub(crate) fn print_middle(separator: &str, title: &str) {
     let left_spacing = (separator_length - title_length) / 2;
     let right_spacing = separator_length - title_length - left_spacing;
 
-    println!("{}{}{}", " ".repeat(left_spacing), title, " ".repeat(right_spacing));
+    println!(
+        "{}{}{}",
+        " ".repeat(left_spacing),
+        title,
+        " ".repeat(right_spacing)
+    );
     println!("{}", separator);
 }

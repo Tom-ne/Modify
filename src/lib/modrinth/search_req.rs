@@ -11,7 +11,7 @@ pub(crate) async fn search_mod(query: &str) -> Result<String, Box<dyn std::error
             } else {
                 Err("Failed to format JSON".into())
             }
-        },
-        Err(err) => Err(err.into())
+        }
+        Err(err) => Err(err.into()),
     }
 }

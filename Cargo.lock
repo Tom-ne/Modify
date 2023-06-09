@@ -403,10 +403,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "mod_manager"
+name = "modify"
 version = "0.1.0"
 dependencies = [
  "async-trait",
+ "indexmap",
  "reqwest",
  "serde",
  "serde_json",
