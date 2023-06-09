@@ -1,17 +1,26 @@
-mod api;
-mod input_helper;
-use input_helper::{get_user_input, flush_output_stream};
+use lib::input_helper::get_user_input;
 use tokio;
+
+use crate::lib::input_helper::flush_output_stream;
+
+mod lib {
+    pub mod input_helper;
+    pub mod modrinth;
+    pub mod config_helper;
+    pub mod mod_manager_settings;
+}
 
 mod commands {
     pub mod search;
     pub mod install;
+    pub mod edit_config;
 }
 
 fn print_menu() {
     println!("==============================================");
     println!("\t\tMod Manager {}", env!("CARGO_PKG_VERSION"));
     println!("==============================================");
+    println!("• config - configure Mod Manager");
     println!("• v - set Minecraft version");
     println!("• Syu - update all mods");
     println!("• S - install mods");
@@ -35,5 +44,7 @@ async fn main() {
         commands::search::run().await;
     } else if input == "S" {
         commands::install::run().await;
+    } else if input == "config" {
+        commands::edit_config::run().await;
     }
 }
