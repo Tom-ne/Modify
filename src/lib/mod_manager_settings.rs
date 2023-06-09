@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::lib::io_helper::print_middle;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub enum Loader {
     Fabric,
@@ -27,6 +29,16 @@ impl ModManagerSettings {
             minecraft_data,
             multi_mc_dir,
         }
+    }
+
+    pub fn print(settings: ModManagerSettings) {
+        let separator = "==============================================";
+        let title = "Mod Manager config";
+        print_middle(separator, title);
+        println!("• Minecraft Mods directory: {}", settings.mc_mod_dir);
+        println!("• Minecraft Version: {}", settings.minecraft_data.version);
+        println!("• Mod Loader: {:?}", settings.minecraft_data.mod_loader);
+        println!("• Multi MC directory: {:?}", settings.multi_mc_dir);
     }
 }
 
