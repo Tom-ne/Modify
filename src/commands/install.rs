@@ -14,6 +14,22 @@ use crate::lib::{
 
 pub struct InstallCommand;
 
+fn get_dep_name(input: &str) -> Option<&str> {
+    let mut started = false;
+    let mut start_index = 0;
+
+    for (idx, c) in input.char_indices() {
+        if c.is_alphabetic() && !started {
+            started = true;
+            start_index = idx;
+        } else if started && c.is_digit(10) {
+            return Some(&input[start_index..idx-1]);
+        }
+    }
+
+    None
+}
+
 async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
     let req = format!("https://api.modrinth.com/v2/version/{}", dep_id);
 
@@ -21,7 +37,10 @@ async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
         .await
         .map_err(|err| io::Error::new(io::ErrorKind::Other, format!("Error: {:?}", err)))?;
 
-    let name = json["name"].to_string();
+    let name = get_dep_name(json["name"].to_string().trim_matches('"'))
+        .unwrap()
+        .to_string();
+
     let files = json["files"].as_array().ok_or_else(|| {
         io::Error::new(
             io::ErrorKind::Other,
@@ -100,22 +119,19 @@ async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), Box<dyn st
             )
         })?;
 
-        println!(
-            "Successfully installed {} for Minecraft version {}",
-            binding, mc_version
-        );
-
-        println!("Installing deps");
+        println!("Installing dependencies...");
 
         // Install dependencies
         for dependency in mod_version.dependencies.iter() {
             let id = &dependency.version_id;
-            println!("{}", id);
             if let Err(err) = install_dep(id).await {
                 eprintln!("Error: {:?}", err);
             }
         }
-        println!("{} has been installed!", binding);
+        println!(
+            "Successfully installed {} for Minecraft version {}",
+            binding, mc_version
+        );
     } else {
         println!(
             "Failed to install {} for Minecraft version {}",
