@@ -1,13 +1,14 @@
-use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
-use crate::lib::modify::command::Command;
-use crate::lib::modify::config_helper::read_config;
-use crate::lib::modrinth::get_project::get_project;
-use crate::lib::modrinth::get_versions::get_mod_versions;
 use async_trait::async_trait;
 use serde_json::Value;
 use std::io::{self, Error, ErrorKind};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
+
+use crate::lib::{
+    io::io_helper::{flush_output_stream, get_user_input},
+    modify::{command::Command, config_helper::read_config},
+    modrinth::{get_project::get_project, get_versions::get_mod_versions},
+};
 
 pub struct InstallCommand;
 
