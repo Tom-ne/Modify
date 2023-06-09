@@ -3,7 +3,7 @@ use std::io::{self, Error, ErrorKind};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 
-use crate::lib::input_helper::{flush_output_stream, get_user_input};
+use crate::lib::io_helper::{flush_output_stream, get_user_input};
 use crate::lib::modrinth::make_request;
 
 struct ModVersion {

@@ -1,6 +1,6 @@
 use serde_json::{Value, Error};
 
-use crate::lib::{input_helper::{flush_output_stream, get_user_input}, modrinth::{search_mod}};
+use crate::lib::{io_helper::{flush_output_stream, get_user_input, print_middle}, modrinth::{search_mod}};
 
 fn print_mod_info(json_str: &str) -> Result<(), Error> {
     let json: Value = serde_json::from_str(json_str)?;
@@ -19,16 +19,7 @@ fn print_mod_info(json_str: &str) -> Result<(), Error> {
                 .unwrap_or_else(Vec::new);
 
             let separator = "==============================================";
-            println!("{}", separator);
-
-            // Calculate the spacing to center the title
-            let separator_length = separator.chars().count();
-            let title_length = title.chars().count();
-            let left_spacing = (separator_length - title_length) / 2;
-            let right_spacing = separator_length - title_length - left_spacing;
-
-            println!("{}{}{}", " ".repeat(left_spacing), title, " ".repeat(right_spacing));
-            println!("{}", separator);
+            print_middle(separator, title);
             println!("• {}", description);
             println!("• Type: {}", project_type);
             println!("• Client side: {}", client_side);
