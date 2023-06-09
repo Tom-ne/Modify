@@ -3,13 +3,11 @@ use std::io::{self, Error, ErrorKind};
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
 
-use crate::{
-    input_helper::{flush_output_stream, get_user_input},
-    api::make_request,
-};
+use crate::lib::input_helper::{flush_output_stream, get_user_input};
+use crate::lib::modrinth::make_request;
 
 struct ModVersion {
-    id: String,
+    // id: String,
     minecraft_version: String,
     download_url: String,
 }
@@ -21,7 +19,7 @@ async fn list_versions(json: &Value) -> Result<Vec<ModVersion>, io::Error> {
     if let Some(versions) = json.as_array() {
         for version in versions {
             // Extract the ID, game versions, and download URL for each version
-            let id = version["id"].as_str().unwrap_or("").to_string();
+            // let id = version["id"].as_str().unwrap_or("").to_string();
             let game_versions = version["game_versions"]
                 .as_array()
                 .map(|versions| {
@@ -44,7 +42,7 @@ async fn list_versions(json: &Value) -> Result<Vec<ModVersion>, io::Error> {
             // Create a ModVersion instance for each game version and add it to the list
             for minecraft_version in game_versions {
                 let mod_version = ModVersion {
-                    id: id.clone(),
+                    // id: id.clone(),
                     minecraft_version: minecraft_version.clone(),
                     download_url: download_url.clone(),
                 };
