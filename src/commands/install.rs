@@ -41,9 +41,9 @@ pub(crate) async fn run() {
     print!("Enter mod to install: ");
     flush_output_stream();
     let input = get_user_input().to_lowercase();
-    print!("Enter mc version: ");
-    flush_output_stream();
-    let mc_version = get_user_input().to_lowercase();
+    let mc_version = read_config("config.json").unwrap().minecraft_data.version;
+
+    println!("Installing {} for Minecraft version {}.", input, mc_version);
 
     match get_project(&input).await {
         Ok(json) => {
