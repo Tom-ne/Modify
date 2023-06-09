@@ -1,12 +1,13 @@
 use serde_json::{Value, Error};
 
-use crate::lib::{io_helper::{flush_output_stream, get_user_input, print_middle}, modrinth::{search_mod}};
+use crate::lib::{io_helper::{flush_output_stream, get_user_input, print_middle}, modrinth::search_req::search_mod};
 
 fn print_mod_info(json_str: &str) -> Result<(), Error> {
     let json: Value = serde_json::from_str(json_str)?;
 
     if let Some(hits) = json["hits"].as_array() {
         for hit in hits {
+            let slug = hit["slug"].as_str().unwrap_or("");
             let title = hit["title"].as_str().unwrap_or("");
             let description = hit["description"].as_str().unwrap_or("");
             let project_type = hit["project_type"].as_str().unwrap_or("");
@@ -21,6 +22,7 @@ fn print_mod_info(json_str: &str) -> Result<(), Error> {
             let separator = "==============================================";
             print_middle(separator, title);
             println!("• {}", description);
+            println!("• Slug: {}", slug);
             println!("• Type: {}", project_type);
             println!("• Client side: {}", client_side);
             println!("• Server side: {}", server_side);

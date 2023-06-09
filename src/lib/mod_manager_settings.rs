@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::lib::io_helper::print_middle;
 
 #[derive(Debug, Serialize, Deserialize)]
-pub enum Loader {
+pub enum ModLoader {
     Fabric,
     Forge,
     Quilt,
@@ -12,7 +12,7 @@ pub enum Loader {
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MCData {
     pub version: String,
-    pub mod_loader: Loader,
+    pub mod_loader: ModLoader,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -20,6 +20,17 @@ pub struct ModManagerSettings {
     pub mc_mod_dir: String,
     pub minecraft_data: MCData,
     pub multi_mc_dir: String,
+}
+
+impl ModLoader {
+    pub fn from_number(number: u32) -> Option<ModLoader> {
+        match number {
+            0 => Some(ModLoader::Fabric),
+            1 => Some(ModLoader::Forge),
+            2 => Some(ModLoader::Quilt),
+            _ => None
+        }
+    }
 }
 
 impl ModManagerSettings {

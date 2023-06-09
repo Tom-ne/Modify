@@ -1,14 +1,20 @@
 use lib::io_helper::get_user_input;
 use tokio;
 
-use crate::lib::io_helper::flush_output_stream;
+use crate::lib::io_helper::{flush_output_stream, clear};
 
 mod lib {
     pub mod io_helper;
-    pub mod modrinth;
     pub mod config_helper;
     pub mod mod_manager_settings;
+    pub mod modrinth {
+        pub mod request_handler;
+        pub mod get_project;
+        pub mod search_req;
+        pub mod get_versions;
+    }
 }
+
 
 mod commands {
     pub mod search;
@@ -30,25 +36,31 @@ fn print_menu() {
     println!("• l - list all mods");
     println!("• h - prints this menu");
     println!("• q - quits the program");
-    print!("Please enter your selection: ");
-    flush_output_stream();
 }
 
 #[tokio::main] // Use the tokio runtime
 async fn main() {
+    clear();
     print_menu();
 
-    let input = get_user_input();
+    let mut input = String::new();
 
-    if input == "q" {
-        println!("Exiting...");
-    } else if input == "sS" {
-        commands::search::run().await;
-    } else if input == "S" {
-        commands::install::run().await;
-    } else if input == "pconfig" {
-        commands::print_config::run().await;
-    } else if input == "config" {
-        commands::edit_config::run().await;
+    while input != "q" {
+        print!("Please enter your selection: ");
+        flush_output_stream();
+        input = get_user_input();
+        if input == "sS" {
+            commands::search::run().await;
+        } else if input == "S" {
+            commands::install::run().await;
+        } else if input == "pconfig" {
+            commands::print_config::run().await;
+        } else if input == "config" {
+            commands::edit_config::run().await;
+        } else if input == "q" {
+            
+        } else {
+            println!("Invalid command!");
+        }
     }
 }

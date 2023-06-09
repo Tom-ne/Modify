@@ -1,4 +1,6 @@
-use std::io::{self, Write};
+use std::io::{self, Write, stdout};
+
+use termion::clear;
 
 pub(crate) fn get_user_input() -> String {
     let mut input = String::new();
@@ -11,6 +13,12 @@ pub(crate) fn get_user_input() -> String {
 
 pub(crate) fn flush_output_stream() {
     io::stdout().flush().unwrap();
+}
+
+pub(crate) fn clear() {
+    let mut stdout = stdout();
+    write!(stdout, "{}", clear::All).unwrap();
+    stdout.flush().unwrap();
 }
 
 pub(crate) fn print_middle(separator: &str, title: &str) {

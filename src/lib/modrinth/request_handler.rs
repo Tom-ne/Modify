@@ -1,6 +1,7 @@
 use reqwest::Client;
 use reqwest::header::{HeaderMap, HeaderName, HeaderValue};
-use serde_json::Result as JsonResult;
+use serde_json::{Result as JsonResult};
+
 
 pub(crate) async fn make_request(req: String, headers: String) -> Result<serde_json::Value, Box<dyn std::error::Error>> {
     let client = Client::new();
@@ -43,20 +44,4 @@ fn parse_headers(headers: Option<&str>) -> HeaderMap {
     }
 
     header_map
-}
-
-pub(crate) async fn search_mod(query: &str) -> Result<String, Box<dyn std::error::Error>> {
-    let req = format!("https://api.modrinth.com/v2/search?query={}", query);
-    let headers = String::new();
-
-    match make_request(req, headers).await {
-        Ok(json) => {
-            if let Ok(pretty_json) = serde_json::to_string_pretty(&json) {
-                Ok(pretty_json)
-            } else {
-                Err("Failed to format JSON".into())
-            }
-        },
-        Err(err) => Err(err.into())
-    }
 }
