@@ -7,12 +7,65 @@ use tokio::io::AsyncWriteExt;
 use crate::lib::{
     io::io_helper::{flush_output_stream, get_user_input},
     modify::{command::Command, config_helper::read_config},
-    modrinth::{get_project::get_project, get_versions::get_mod_versions},
+    modrinth::{
+        get_project::get_project, get_versions::get_mod_versions, request_handler::make_request,
+    },
 };
 
 pub struct InstallCommand;
 
-async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error> {
+async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
+    let req = format!("https://api.modrinth.com/v2/version/{}", dep_id);
+
+    let json = make_request(req, String::new())
+        .await
+        .map_err(|err| io::Error::new(io::ErrorKind::Other, format!("Error: {:?}", err)))?;
+
+    let name = json["name"].to_string();
+    let files = json["files"].as_array().ok_or_else(|| {
+        io::Error::new(
+            io::ErrorKind::Other,
+            "Failed to parse files array from JSON",
+        )
+    })?;
+
+    let file_urls = files
+        .iter()
+        .filter_map(|file| file["url"].as_str().map(|url| url.to_string()))
+        .collect::<Vec<_>>();
+
+    let file_url = &file_urls[0];
+
+    let response = reqwest::get(file_url)
+        .await
+        .map_err(|err| Error::new(ErrorKind::Other, format!("Request failed: {:?}", err)))?;
+
+    let config = read_config().unwrap();
+
+    let file_name = format!(
+        "{}/{}-{}.jar",
+        config.mc_mod_dir,
+        name.replace("-", "_"),
+        config.minecraft_data.version
+    );
+    let mut file = File::create(&file_name).await?;
+    let mut content = response.bytes().await.map_err(|err| {
+        Error::new(
+            ErrorKind::Other,
+            format!("Failed to read response: {:?}", err),
+        )
+    })?;
+    file.write_all(&mut content).await.map_err(|err| {
+        Error::new(
+            ErrorKind::Other,
+            format!("Failed to write to file: {:?}", err),
+        )
+    })?;
+
+    Ok(())
+}
+
+async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), Box<dyn std::error::Error>> {
     let json: Value = serde_json::from_str(json_str)?;
 
     let binding = json["slug"].as_str().unwrap_or("").trim_matches('"');
@@ -33,7 +86,7 @@ async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error>
             binding.replace("-", "_"),
             mod_version.minecraft_version
         );
-        let mut file = File::create(file_name).await?;
+        let mut file = File::create(&file_name).await?;
         let mut content = response.bytes().await.map_err(|err| {
             Error::new(
                 ErrorKind::Other,
@@ -51,6 +104,18 @@ async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), io::Error>
             "Successfully installed {} for Minecraft version {}",
             binding, mc_version
         );
+
+        println!("Installing deps");
+
+        // Install dependencies
+        for dependency in mod_version.dependencies.iter() {
+            let id = &dependency.version_id;
+            println!("{}", id);
+            if let Err(err) = install_dep(id).await {
+                eprintln!("Error: {:?}", err);
+            }
+        }
+        println!("{} has been installed!", binding);
     } else {
         println!(
             "Failed to install {} for Minecraft version {}",

@@ -1,12 +1,15 @@
-use std::io;
-
-use serde_json::Value;
-
 use super::request_handler::make_request;
+use serde_json::Value;
+use std::io;
 
 pub(crate) struct ModVersion {
     pub minecraft_version: String,
     pub download_url: String,
+    pub dependencies: Vec<ModDependency>, // New field to store dependencies
+}
+
+pub(crate) struct ModDependency {
+    pub version_id: String,
 }
 
 async fn list_versions(json: &Value) -> Result<Vec<ModVersion>, io::Error> {
@@ -14,20 +17,36 @@ async fn list_versions(json: &Value) -> Result<Vec<ModVersion>, io::Error> {
 
     if let Some(versions) = json.as_array() {
         for version in versions {
-            if let (Some(game_versions), Some(download_url)) = (
+            if let (
+                Some(game_versions),
+                Some(download_url),
+                Some(dependencies),
+            ) = (
                 version["game_versions"].as_array(),
-                version["files"]
-                    .as_array()
-                    .and_then(|files| files[0]["url"].as_str()),
+                version["files"].as_array().and_then(|files| files[0]["url"].as_str()),
+                version["dependencies"].as_array(),
             ) {
                 let minecraft_versions = game_versions
                     .iter()
                     .map(|v| v.as_str().unwrap_or("").to_string())
                     .collect::<Vec<_>>()
                     .join(", ");
+
+                let mod_dependencies = dependencies
+                    .iter()
+                    .map(|dep| ModDependency {
+                        version_id: dep["version_id"]
+                            .as_str()
+                            .unwrap_or("")
+                            .trim_matches('"')
+                            .to_string()
+                    })
+                    .collect::<Vec<_>>();
+
                 let mod_version = ModVersion {
                     minecraft_version: minecraft_versions,
                     download_url: download_url.to_string(),
+                    dependencies: mod_dependencies,
                 };
                 mod_versions.push(mod_version);
             }
