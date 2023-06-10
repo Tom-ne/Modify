@@ -11,7 +11,7 @@ impl Command for PrintConfigCommand {
     async fn run(&self) {
         let settings: ModManagerSettings = read_config().unwrap();
 
-        ModManagerSettings::print(settings);
+        settings.print();
     }
 
     fn description(&self) -> &str {

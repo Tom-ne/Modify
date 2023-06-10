@@ -41,7 +41,7 @@ impl Command for UninstallCommand {
             if mc_mod.starts_with(&input) {
                 let filepath = format!("{}{}", &dir_path, mc_mod);
                 match fs::remove_file(&filepath) {
-                    Ok(()) => println!("File removed successfully"),
+                    Ok(()) => println!("{} has been uninstalled successfully", input),
                     Err(err) => println!("Failed to remove file: {}", err),
                 }
                 break;

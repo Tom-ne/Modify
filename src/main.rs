@@ -1,4 +1,7 @@
-use lib::{io::io_helper::clear, modify::command_handler::{print_help_menu, create_command_handler}};
+use lib::{
+    io::io_helper::clear,
+    modify::command_handler::{create_command_handler, print_help_menu},
+};
 use tokio;
 
 use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
@@ -26,14 +29,18 @@ mod lib {
 }
 
 mod commands {
-    pub mod edit_config;
-    pub mod help;
-    pub mod install;
-    pub mod list_mods;
-    pub mod print_config;
-    pub mod quit;
-    pub mod search;
-    pub mod uninstall;
+    pub mod configuration {
+        pub mod edit_config;
+        pub mod print_config;
+    }
+    pub mod cmd {
+        pub mod help;
+        pub mod install;
+        pub mod list_mods;
+        pub mod quit;
+        pub mod search;
+        pub mod uninstall;
+    }
 }
 
 #[tokio::main] // Use the tokio runtime

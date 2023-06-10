@@ -1,8 +1,10 @@
 use crate::{
     commands::{
-        edit_config::EditConfigCommand, help::HelpCommand, install::InstallCommand,
-        list_mods::ListCommand, print_config::PrintConfigCommand, quit::QuitCommand,
-        search::SearchCommand, uninstall::UninstallCommand,
+        cmd::{
+            help::HelpCommand, install::InstallCommand, list_mods::ListCommand, quit::QuitCommand,
+            search::SearchCommand, uninstall::UninstallCommand,
+        },
+        configuration::{edit_config::EditConfigCommand, print_config::PrintConfigCommand},
     },
     lib::io::io_helper::print_middle,
 };

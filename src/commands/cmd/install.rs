@@ -6,7 +6,7 @@ use tokio::io::AsyncWriteExt;
 
 use crate::lib::{
     io::io_helper::{flush_output_stream, get_user_input},
-    modify::{command::Command, config_helper::read_config},
+    modify::{command::Command, config_helper::read_config, modify_settings::ModLoader},
     modrinth::{
         get_project::get_project, get_versions::get_mod_versions, request_handler::make_request,
     },
@@ -85,14 +85,18 @@ async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
     Ok(())
 }
 
-async fn download_mod(json_str: &str, mc_version: &str) -> Result<(), Box<dyn std::error::Error>> {
+async fn download_mod(
+    json_str: &str,
+    mc_version: &str,
+    mod_loader: ModLoader,
+) -> Result<(), Box<dyn std::error::Error>> {
     let json: Value = serde_json::from_str(json_str)?;
 
     let binding = json["slug"].as_str().unwrap_or("").trim_matches('"');
     let mod_versions = get_mod_versions(binding).await?;
     if let Some(mod_version) = mod_versions
         .iter()
-        .find(|v| v.minecraft_version == mc_version)
+        .find(|v| v.minecraft_version == mc_version && v.loader.contains(&mod_loader))
     {
         let response = reqwest::get(&mod_version.download_url)
             .await
@@ -149,14 +153,16 @@ impl Command for InstallCommand {
         print!("Enter mod to install: ");
         flush_output_stream();
         let input = get_user_input().to_lowercase();
-        let mc_version = read_config().unwrap().minecraft_data.version;
+        let config = read_config().unwrap();
+        let mc_version = config.minecraft_data.version;
+        let loader = config.minecraft_data.mod_loader;
 
         println!("Installing {} for Minecraft version {}.", input, mc_version);
 
         match get_project(&input).await {
             Ok(json) => {
                 if let Ok(pretty_json) = serde_json::to_string_pretty(&json) {
-                    if let Err(err) = download_mod(&pretty_json, &mc_version).await {
+                    if let Err(err) = download_mod(&pretty_json, &mc_version, loader).await {
                         eprintln!("Error: {:?}", err);
                     }
                 } else {

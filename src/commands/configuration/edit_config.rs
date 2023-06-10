@@ -7,7 +7,7 @@ use crate::{
         modify::{
             command::Command,
             config_helper::{read_config, write_config},
-            modify_settings::{ModLoader, ModManagerSettings},
+            modify_settings::ModLoader,
         },
     },
 };
@@ -61,7 +61,7 @@ impl Command for EditConfigCommand {
 
         write_config(config_path, &settings).unwrap();
 
-        ModManagerSettings::print(settings);
+        settings.print();
     }
 
     fn description(&self) -> &str {
