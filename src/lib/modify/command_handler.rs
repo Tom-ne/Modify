@@ -1,8 +1,9 @@
 use crate::{
     commands::{
         cmd::{
-            help::HelpCommand, install::InstallCommand, list_mods::ListCommand, quit::QuitCommand,
-            search::SearchCommand, uninstall::UninstallCommand,
+            clear::ClearCommand, help::HelpCommand, install::InstallCommand,
+            list_mods::ListCommand, quit::QuitCommand, search::SearchCommand,
+            uninstall::UninstallCommand,
         },
         configuration::{edit_config::EditConfigCommand, print_config::PrintConfigCommand},
     },
@@ -21,6 +22,7 @@ pub(crate) fn create_command_handler() -> IndexMap<&'static str, Box<dyn Command
     dispatcher.insert("pconfig", Box::new(PrintConfigCommand));
     dispatcher.insert("config", Box::new(EditConfigCommand));
     dispatcher.insert("l", Box::new(ListCommand));
+    dispatcher.insert("clear", Box::new(ClearCommand));
     dispatcher.insert("h", Box::new(HelpCommand));
     dispatcher.insert("q", Box::new(QuitCommand));
 

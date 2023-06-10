@@ -40,6 +40,7 @@ mod commands {
         pub mod quit;
         pub mod search;
         pub mod uninstall;
+        pub mod clear;
     }
 }
 
@@ -53,7 +54,7 @@ async fn main() {
     let mut input = String::new();
 
     while input != "q" {
-        print!("Please enter your selection: ");
+        print!("Please enter your selection (enter h for help): ");
         flush_output_stream();
         input = get_user_input();
 
