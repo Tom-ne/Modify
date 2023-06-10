@@ -6,7 +6,7 @@ use std::{
 
 use crate::constants::CONFIG_FILE_PATH;
 
-use super::modify_settings::{ModManagerSettings, MCData, ModLoader};
+use super::modify_settings::{MCData, ModLoader, ModManagerSettings};
 
 fn file_exists(path: &str) -> bool {
     let file_path = Path::new(path);

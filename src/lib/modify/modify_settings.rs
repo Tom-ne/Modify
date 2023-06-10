@@ -34,12 +34,11 @@ impl ModLoader {
     }
 
     pub fn from_string(input: String) -> ModLoader {
-
         match input.to_lowercase().as_str() {
             "fabric" => return ModLoader::Fabric,
             "forge" => return ModLoader::Forge,
             "quilt" => return ModLoader::Quilt,
-            _ => return ModLoader::None
+            _ => return ModLoader::None,
         };
     }
 
