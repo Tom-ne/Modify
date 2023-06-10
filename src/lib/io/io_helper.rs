@@ -12,7 +12,9 @@ pub(crate) fn get_user_input() -> String {
 }
 
 pub(crate) fn flush_output_stream() {
-    io::stdout().flush().unwrap();
+    if let Err(err) = io::stdout().flush() {
+        eprintln!("Failed to flush output stream: {}", err);
+    }
 }
 
 pub(crate) fn clear() {
