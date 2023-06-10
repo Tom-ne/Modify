@@ -32,6 +32,18 @@ impl ModLoader {
             _ => Some(ModLoader::None),
         }
     }
+
+    pub fn from_list(input: Vec<String>) -> Vec<ModLoader> {
+        input
+            .into_iter()
+            .map(|loader| match loader.to_lowercase().as_str() {
+                "fabric" => ModLoader::Fabric,
+                "forge" => ModLoader::Forge,
+                "quilt" => ModLoader::Quilt,
+                _ => ModLoader::None,
+            })
+            .collect()
+    }
 }
 
 impl ModManagerSettings {
