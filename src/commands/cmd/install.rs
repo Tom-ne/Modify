@@ -35,15 +35,18 @@ async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
 
     let json = make_request(req, String::new())
         .await
-        .map_err(|err| io::Error::new(io::ErrorKind::Other, format!("Error: {:?}", err)))?;
+        .map_err(|err| Error::new(io::ErrorKind::Other, format!("Error: {:?}", err)))?;
 
-    let name = get_dep_name(json["name"].to_string().trim_matches('"'))
-        .unwrap()
-        .to_string()
-        .to_lowercase();
+    let mut name = String::new();
+
+    if let Some(dep_name) = get_dep_name(json["name"].to_string().trim_matches('"')) {
+        name = dep_name.to_string().to_lowercase();
+    } else {
+        io::Error::new(io::ErrorKind::Other, "Failed to get dependency name");
+    }
 
     let files = json["files"].as_array().ok_or_else(|| {
-        io::Error::new(
+        Error::new(
             io::ErrorKind::Other,
             "Failed to parse files array from JSON",
         )
