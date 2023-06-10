@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::lib::io::io_helper::print_middle;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub enum ModLoader {
     Fabric,
     Forge,
@@ -33,15 +33,20 @@ impl ModLoader {
         }
     }
 
+    pub fn from_string(input: String) -> ModLoader {
+
+        match input.to_lowercase().as_str() {
+            "fabric" => return ModLoader::Fabric,
+            "forge" => return ModLoader::Forge,
+            "quilt" => return ModLoader::Quilt,
+            _ => return ModLoader::None
+        };
+    }
+
     pub fn from_list(input: Vec<String>) -> Vec<ModLoader> {
         input
             .into_iter()
-            .map(|loader| match loader.to_lowercase().as_str() {
-                "fabric" => ModLoader::Fabric,
-                "forge" => ModLoader::Forge,
-                "quilt" => ModLoader::Quilt,
-                _ => ModLoader::None,
-            })
+            .map(|loader| ModLoader::from_string(loader.to_lowercase().to_string()))
             .collect()
     }
 }
@@ -55,13 +60,13 @@ impl ModManagerSettings {
         }
     }
 
-    pub fn print(settings: ModManagerSettings) {
+    pub fn print(&self) {
         let separator = "==============================================";
         let title = "Modify config";
         print_middle(separator, title);
-        println!("• Minecraft Mods directory: {}", settings.mc_mod_dir);
-        println!("• Minecraft Version: {}", settings.minecraft_data.version);
-        println!("• Mod Loader: {:?}", settings.minecraft_data.mod_loader);
-        println!("• Multi MC directory: {:?}", settings.multi_mc_dir);
+        println!("• Minecraft Mods directory: {}", self.mc_mod_dir);
+        println!("• Minecraft Version: {}", self.minecraft_data.version);
+        println!("• Mod Loader: {:?}", self.minecraft_data.mod_loader);
+        println!("• Multi MC directory: {:?}", self.multi_mc_dir);
     }
 }

@@ -1,3 +1,5 @@
+use crate::lib::modify::modify_settings::ModLoader;
+
 use super::request_handler::make_request;
 use serde_json::Value;
 use std::io;
@@ -6,6 +8,7 @@ pub(crate) struct ModVersion {
     pub minecraft_version: String,
     pub download_url: String,
     pub dependencies: Vec<ModDependency>, // New field to store dependencies
+    pub loader: Vec<ModLoader>,
 }
 
 pub(crate) struct ModDependency {
@@ -17,14 +20,13 @@ async fn list_versions(json: &Value) -> Result<Vec<ModVersion>, io::Error> {
 
     if let Some(versions) = json.as_array() {
         for version in versions {
-            if let (
-                Some(game_versions),
-                Some(download_url),
-                Some(dependencies),
-            ) = (
+            if let (Some(game_versions), Some(download_url), Some(dependencies), Some(loaders)) = (
                 version["game_versions"].as_array(),
-                version["files"].as_array().and_then(|files| files[0]["url"].as_str()),
+                version["files"]
+                    .as_array()
+                    .and_then(|files| files[0]["url"].as_str()),
                 version["dependencies"].as_array(),
+                version["loaders"].as_array(),
             ) {
                 let minecraft_versions = game_versions
                     .iter()
@@ -39,7 +41,7 @@ async fn list_versions(json: &Value) -> Result<Vec<ModVersion>, io::Error> {
                             .as_str()
                             .unwrap_or("")
                             .trim_matches('"')
-                            .to_string()
+                            .to_string(),
                     })
                     .collect::<Vec<_>>();
 
@@ -47,6 +49,12 @@ async fn list_versions(json: &Value) -> Result<Vec<ModVersion>, io::Error> {
                     minecraft_version: minecraft_versions,
                     download_url: download_url.to_string(),
                     dependencies: mod_dependencies,
+                    loader: ModLoader::from_list(
+                        loaders
+                            .iter()
+                            .filter_map(|loader| loader.as_str().map(|s| s.to_lowercase()))
+                            .collect::<Vec<_>>(),
+                    ),
                 };
                 mod_versions.push(mod_version);
             }
