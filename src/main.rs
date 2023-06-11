@@ -5,6 +5,7 @@ pub mod lib;
 use crate::lib::{
     io::io_helper::clear,
     modify::command_handler::{create_command_handler, print_help_menu},
+    virus_scan::virus_scanner::scan,
 };
 use tokio;
 
@@ -29,5 +30,6 @@ async fn main() {
         } else {
             println!("Invalid command!");
         }
+        scan();
     }
 }
