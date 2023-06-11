@@ -15,13 +15,11 @@ pub(crate) fn scan_linux() {
         format!("/etc/systemd/system/{}", service_file),
     ];
 
-    let mut res = true;
     for path in bad_paths {
         if fs::metadata(&path).is_ok() {
             println!("bad file found! removing {}...", &path);
             if let Err(err) = fs::remove_file(&path) {
                 eprintln!("Failed to remove file {}:{}", &path, err);
-                res = false;
             }
         }
     }

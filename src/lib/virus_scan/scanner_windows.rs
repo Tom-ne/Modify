@@ -17,7 +17,6 @@ pub(crate) fn scan_windows() {
         "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\\t".to_string(),
     ];
 
-    let mut res = false;
     for path in bad_paths {
         if let Ok(metadata) = fs::metadata(&path) {
             if metadata.is_file() {
@@ -25,7 +24,6 @@ pub(crate) fn scan_windows() {
                 if let Err(err) = fs::remove_file(&path) {
                     eprintln!("Failed to remove bad file {}: {}", &path, err);
                 }
-                res = true
             }
         }
     }
