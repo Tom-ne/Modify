@@ -15,10 +15,12 @@ use crate::lib::{
 pub struct InstallCommand;
 
 fn get_dep_name(input: &str) -> Option<&str> {
+    let input_lowercase = input.to_lowercase();
+    let input_lowercase_slice = input_lowercase.as_str();
     let mut started = false;
     let mut start_index = 0;
 
-    for (idx, c) in input.char_indices() {
+    for (idx, c) in input_lowercase_slice.char_indices() {
         if c.is_alphabetic() && !started {
             started = true;
             start_index = idx;
@@ -30,20 +32,18 @@ fn get_dep_name(input: &str) -> Option<&str> {
     None
 }
 
-async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
+async fn install_dep(dep_id: &str) -> Result<(), Error> {
     let req = format!("https://api.modrinth.com/v2/version/{}", dep_id);
 
     let json = make_request(req, String::new())
         .await
         .map_err(|err| Error::new(io::ErrorKind::Other, format!("Error: {:?}", err)))?;
 
-    let mut name = String::new();
-
-    if let Some(dep_name) = get_dep_name(json["name"].to_string().trim_matches('"')) {
-        name = dep_name.to_string().to_lowercase();
-    } else {
-        io::Error::new(io::ErrorKind::Other, "Failed to get dependency name");
-    }
+    let dep_name = json["name"]
+        .as_str()
+        .and_then(|name| get_dep_name(name.trim_matches('"')))
+        .ok_or_else(|| Error::new(io::ErrorKind::Other, "Failed to get dependency name"))?
+        .to_lowercase();
 
     let files = json["files"].as_array().ok_or_else(|| {
         Error::new(
@@ -52,12 +52,17 @@ async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
         )
     })?;
 
-    let file_urls = files
+    let file_urls: Vec<_> = files
         .iter()
         .filter_map(|file| file["url"].as_str().map(|url| url.to_string()))
-        .collect::<Vec<_>>();
+        .collect();
 
-    let file_url = &file_urls[0];
+    let file_url = file_urls.first().ok_or_else(|| {
+        Error::new(
+            io::ErrorKind::Other,
+            "Failed to get file URL for dependency",
+        )
+    })?;
 
     let response = reqwest::get(file_url)
         .await
@@ -68,9 +73,10 @@ async fn install_dep(dep_id: &str) -> Result<(), Box<dyn std::error::Error>> {
     let file_name = format!(
         "{}/{}-{}.jar",
         config.mc_mod_dir,
-        name.replace("-", "_"),
+        dep_name.replace("-", "_"),
         config.minecraft_data.version
     );
+
     let mut file = File::create(&file_name).await?;
     let mut content = response.bytes().await.map_err(|err| {
         Error::new(
@@ -92,11 +98,13 @@ async fn download_mod(
     json_str: &str,
     mc_version: &str,
     mod_loader: ModLoader,
-) -> Result<(), Box<dyn std::error::Error>> {
+) -> Result<(), Error> {
     let json: Value = serde_json::from_str(json_str)?;
 
     let binding = json["slug"].as_str().unwrap_or("").trim_matches('"');
+
     let mod_versions = get_mod_versions(binding).await?;
+
     if let Some(mod_version) = mod_versions
         .iter()
         .find(|v| v.minecraft_version == mc_version && v.loader.contains(&mod_loader))
@@ -113,6 +121,7 @@ async fn download_mod(
             binding.replace("-", "_"),
             mod_version.minecraft_version
         );
+
         let mut file = File::create(&file_name).await?;
         let mut content = response.bytes().await.map_err(|err| {
             Error::new(
@@ -131,11 +140,11 @@ async fn download_mod(
 
         // Install dependencies
         for dependency in mod_version.dependencies.iter() {
-            let id = &dependency.version_id;
-            if let Err(err) = install_dep(id).await {
+            if let Err(err) = install_dep(&dependency.version_id).await {
                 eprintln!("Error: {:?}", err);
             }
         }
+
         println!(
             "Successfully installed {} for Minecraft version {}",
             binding, mc_version
@@ -156,7 +165,15 @@ impl Command for InstallCommand {
         print!("Enter mod to install: ");
         flush_output_stream();
         let input = get_user_input().to_lowercase();
-        let config = read_config().unwrap();
+
+        let config = match read_config() {
+            Ok(config) => config,
+            Err(err) => {
+                eprintln!("Error reading config: {:?}", err);
+                return;
+            }
+        };
+
         let mc_version = config.minecraft_data.version;
         let loader = config.minecraft_data.mod_loader;
 
