@@ -1,4 +1,5 @@
 use async_trait::async_trait;
+use std::convert::TryInto;
 
 use crate::{
     constants::CONFIG_FILE_PATH,
@@ -18,8 +19,8 @@ fn print_menu() {
     let separator = "==============================================";
     let title = "Modify config Editor";
     print_middle(separator, title);
-    println!("• mdir - Mods directory path");
-    println!("• mc_version - Minecraft version");
+    println!("• mdir - Mods Directory Path");
+    println!("• mc_version - Minecraft Version");
     println!("• mloader - Mod Loader");
     println!("• multimc - Multi MC Directory");
 }
@@ -34,37 +35,52 @@ impl Command for EditConfigCommand {
         println!("What would you like to edit?");
         let input = get_user_input();
 
-        if input == "mdir" {
-            print!("Enter new Mods directory path: ");
-            flush_output_stream();
-            let input = get_user_input();
-            settings.mc_mod_dir = String::from(input);
-        } else if input == "mc_version" {
-            print!("Enter new Minecraft version: ");
-            flush_output_stream();
-            let input = get_user_input();
-            settings.minecraft_data.version = input;
-        } else if input == "mloader" {
-            print!("Enter new Mod loader (1: Fabric, 2: Forge, 3: Quilt): ");
-            flush_output_stream();
-            let loader_option: i32 = get_user_input().parse().unwrap();
-            settings.minecraft_data.mod_loader =
-                ModLoader::from_number((loader_option - 1).try_into().unwrap()).unwrap();
-        } else if input == "multimc" {
-            print!("Enter new multimc directory path: ");
-            flush_output_stream();
-            let input = get_user_input();
-            settings.multi_mc_dir = String::from(input);
-        } else {
-            println!("Invalid option!");
+        match input.as_str() {
+            "mdir" => {
+                print!("Enter new Mods directory path: ");
+                flush_output_stream();
+                let input = get_user_input();
+                settings.mc_mod_dir = String::from(input);
+            }
+            "mc_version" => {
+                print!("Enter new Minecraft version: ");
+                flush_output_stream();
+                let input = get_user_input();
+                settings.minecraft_data.version = input;
+            }
+            "mloader" => {
+                println!("Enter new Mod loader:");
+                println!("1. Fabric");
+                println!("2. Forge");
+                println!("3. Quilt");
+                flush_output_stream();
+                let loader_option: i32 = get_user_input().parse().unwrap_or(0);
+                match ModLoader::from_number((loader_option - 1).try_into().unwrap()) {
+                    Some(mod_loader) => {
+                        settings.minecraft_data.mod_loader = mod_loader;
+                    }
+                    None => println!("Invalid Mod Loader option!"),
+                }
+            }
+            "multimc" => {
+                print!("Enter new Multi MC directory path: ");
+                flush_output_stream();
+                let input = get_user_input();
+                settings.multi_mc_dir = String::from(input);
+            }
+            _ => {
+                println!("Invalid option!");
+                return;
+            }
         }
 
         write_config(config_path, &settings).unwrap();
 
+        println!("Configuration updated successfully!");
         settings.print();
     }
 
     fn description(&self) -> &str {
-        "configure Modify"
+        "Configure Modify"
     }
 }
