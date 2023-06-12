@@ -17,7 +17,6 @@ pub(crate) fn read_config() -> io::Result<ModManagerSettings> {
     let path = CONFIG_FILE_PATH;
     if !file_exists(path) {
         write_config(
-            path,
             &ModManagerSettings::new(
                 "/path/to/mods".to_string(),
                 MCData {
@@ -37,7 +36,8 @@ pub(crate) fn read_config() -> io::Result<ModManagerSettings> {
     Ok(settings)
 }
 
-pub(crate) fn write_config(path: &str, settings: &ModManagerSettings) -> io::Result<()> {
+pub(crate) fn write_config(settings: &ModManagerSettings) -> io::Result<()> {
+    let path = CONFIG_FILE_PATH;
     let json = serde_json::to_string(settings)?;
 
     let mut file = File::create(path)?;
