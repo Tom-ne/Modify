@@ -10,6 +10,7 @@ use crate::{
             config_helper::{read_config, write_config},
             modify_settings::ModLoader,
         },
+        modrinth::get_mc_version::get_mc_versions,
     },
 };
 
@@ -46,6 +47,14 @@ impl Command for EditConfigCommand {
                 print!("Enter new Minecraft version: ");
                 flush_output_stream();
                 let input = get_user_input();
+
+                let mc_versions = get_mc_versions().await.unwrap();
+                println!("{:?}", mc_versions);
+
+                if !mc_versions.contains(&input) {
+                    println!("Invalid Minecraft version!");
+                    return;
+                }
                 settings.minecraft_data.version = input;
             }
             "mloader" => {
