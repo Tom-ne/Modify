@@ -2,7 +2,6 @@ use async_trait::async_trait;
 use std::convert::TryInto;
 
 use crate::{
-    constants::CONFIG_FILE_PATH,
     lib::{
         io::io_helper::{flush_output_stream, get_user_input, print_middle},
         modify::{
@@ -29,7 +28,6 @@ fn print_menu() {
 #[async_trait]
 impl Command for EditConfigCommand {
     async fn run(&self) {
-        let config_path = CONFIG_FILE_PATH;
         let mut settings = read_config().unwrap();
 
         print_menu();
@@ -83,7 +81,7 @@ impl Command for EditConfigCommand {
             }
         }
 
-        write_config(config_path, &settings).unwrap();
+        write_config(&settings).unwrap();
 
         println!("Configuration updated successfully!");
         settings.print();
