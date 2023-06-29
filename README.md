@@ -16,6 +16,7 @@ Modify is a command-line tool written in Rust that provides an easy and efficien
 - Mod backup and restore: Create backups of your Minecraft installations and restore them as needed.
 - Mod updating: Keep your installed mods up to date with the latest versions available.
 - Mod search: Search for mods based on keywords, categories, or tags.
+- Graphical user interface: The same features, with a graphical user interface
 
 ## Installation
 
