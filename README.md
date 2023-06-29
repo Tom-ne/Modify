@@ -2,17 +2,20 @@
 
 Modify is a command-line tool written in Rust that provides an easy and efficient way to manage mods for the Minecraft game. It simplifies the process of installing, removing, and updating mods, allowing Minecraft players to enhance their gameplay experience with ease.
 
-## Features
+## Current Features
 
 - Mod installation: Easily install mods from Modrinth.
-- Mod removal: Uninstall mods that are no longer needed or desired.
-- Mod updating: Keep your installed mods up to date with the latest versions available.
-- Mod search: Search for mods based on keywords, categories, or tags.
-- Dependency management: Automatically handle mod dependencies and ensure compatibility.
-- Mod backup and restore: Create backups of your Minecraft installations and restore them as needed.
+- Mod removal: Uninstall mods that are no desired.
+- Mod search: Search for mods based on names.
+- Dependency management: Automatically handle mod dependency installation to ensure compatibility.
 - Minecraft version compatibility: Check for mod compatibility with different Minecraft versions.
 - Configuration management: Customize mod settings and options using configuration files.
 - User-friendly interface: Intuitive command-line interface with clear instructions and feedback.
+
+## Future Features
+- Mod backup and restore: Create backups of your Minecraft installations and restore them as needed.
+- Mod updating: Keep your installed mods up to date with the latest versions available.
+- Mod search: Search for mods based on keywords, categories, or tags.
 
 ## Installation
 
