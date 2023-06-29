@@ -73,5 +73,6 @@ This project is licensed under the [MIT License](LICENSE). Feel free to use, mod
 
 - The Rust programming language and its community for providing a powerful and reliable development environment.
 - The Minecraft modding community for their incredible creations and continuous inspiration.
+- Modrinth for creating an easy to use and powerfull API
 
 Enjoy modding your Minecraft game with Modify!
