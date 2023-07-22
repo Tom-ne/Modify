@@ -59,10 +59,8 @@ Contributions to the Modify project are welcome! If you would like to contribute
 1. Fork the repository and clone it to your local machine.
 2. Create a new branch for your feature or bug fix.
 3. Make your changes and ensure that the code builds successfully.
-4. Write tests to cover any new functionality or modifications.
-5. Run the tests and make sure they pass.
-6. Commit your changes and push them to your forked repository.
-7. Submit a pull request with a detailed description of your changes.
+4. Commit your changes and push them to your forked repository.
+5. Submit a pull request with a detailed description of your changes.
 
 Please review the [Contributing Guidelines](CONTRIBUTING.md) for more information.
 
