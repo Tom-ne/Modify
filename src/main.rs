@@ -3,13 +3,11 @@ pub mod constants;
 pub mod lib;
 
 use crate::lib::{
-    io::io_helper::clear,
+    io::io_helper::{clear, flush_output_stream, get_user_input},
     modify::command_handler::{create_command_handler, print_help_menu},
     virus_scan::virus_scanner::scan,
 };
 use tokio;
-
-use crate::lib::io::io_helper::{flush_output_stream, get_user_input};
 
 #[tokio::main] // Use the tokio runtime
 async fn main() {
