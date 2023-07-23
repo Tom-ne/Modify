@@ -9,7 +9,7 @@ use crate::lib::{
 };
 use tokio;
 
-#[tokio::main] // Use the tokio runtime
+#[tokio::main]
 async fn main() {
     clear();
     print_help_menu();
