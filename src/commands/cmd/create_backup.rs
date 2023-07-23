@@ -79,8 +79,13 @@ impl Command for CreateBackupCommand {
             local_time.year()
         );
 
-        let backup_folder_str = format!("{}/{}", mc_folder.display(), "backup");
+        let backup_folder_str = format!("{}/{}", mc_folder.display(), "mod-backups");
         let backup_folder = Path::new(&backup_folder_str);
+
+        if let Err(e) = fs::create_dir_all(backup_folder) {
+            println!("Error creating backup folder: {:?}", e);
+            return;
+        }
 
         let zip_file_path = format!("{}.zip", formatted_time);
         let output_zip = backup_folder.join(zip_file_path);
