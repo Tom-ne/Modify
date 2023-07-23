@@ -24,8 +24,8 @@ pub(crate) fn create_command_handler() -> IndexMap<&'static str, Box<dyn Command
     dispatcher.insert("l", Box::new(ListCommand));
     dispatcher.insert("clear", Box::new(ClearCommand));
     dispatcher.insert("h", Box::new(HelpCommand));
-    dispatcher.insert("q", Box::new(QuitCommand));
     dispatcher.insert("cb", Box::new(CreateBackupCommand));
+    dispatcher.insert("q", Box::new(QuitCommand));
 
     // Add more commands here
 
