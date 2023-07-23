@@ -1,16 +1,14 @@
 use async_trait::async_trait;
 use std::convert::TryInto;
 
-use crate::{
-    lib::{
-        io::io_helper::{flush_output_stream, get_user_input, print_middle},
-        modify::{
-            command::Command,
-            config_helper::{read_config, write_config},
-            modify_settings::ModLoader,
-        },
-        modrinth::get_mc_version::get_mc_versions,
+use crate::lib::{
+    io::io_helper::{flush_output_stream, get_user_input, print_middle},
+    modify::{
+        command::Command,
+        config_helper::{read_config, write_config},
+        modify_settings::ModLoader,
     },
+    modrinth::get_mc_version::get_mc_versions,
 };
 
 pub struct EditConfigCommand;
