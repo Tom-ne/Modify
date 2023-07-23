@@ -3,7 +3,7 @@ use crate::{
         cmd::{
             clear::ClearCommand, help::HelpCommand, install::InstallCommand,
             list_mods::ListCommand, quit::QuitCommand, search::SearchCommand,
-            uninstall::UninstallCommand,
+            uninstall::UninstallCommand, create_backup::CreateBackupCommand,
         },
         configuration::{edit_config::EditConfigCommand, print_config::PrintConfigCommand},
     },
@@ -25,6 +25,7 @@ pub(crate) fn create_command_handler() -> IndexMap<&'static str, Box<dyn Command
     dispatcher.insert("clear", Box::new(ClearCommand));
     dispatcher.insert("h", Box::new(HelpCommand));
     dispatcher.insert("q", Box::new(QuitCommand));
+    dispatcher.insert("cb", Box::new(CreateBackupCommand));
 
     // Add more commands here
 
