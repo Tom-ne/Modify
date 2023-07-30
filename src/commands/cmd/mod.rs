@@ -1,4 +1,5 @@
 pub mod create_backup;
+pub mod load_backup;
 pub mod clear;
 pub mod help;
 pub mod install;
