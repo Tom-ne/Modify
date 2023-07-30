@@ -55,7 +55,7 @@ pub(crate) fn unzip_file(
     // Extract each file from the ZIP archive
     for i in 0..zip_archive.len() {
         let mut file = zip_archive.by_index(i)?;
-        let file_name = file.sanitized_name();
+        let file_name = file.mangled_name();
 
         // Create the output file path
         let output_path = format!("{}/{}", output_dir, file_name.to_string_lossy());
