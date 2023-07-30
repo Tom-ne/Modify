@@ -105,10 +105,13 @@ async fn download_mod(
 
     let mod_versions = get_mod_versions(binding).await?;
 
-    if let Some(mod_version) = mod_versions
-        .iter()
-        .find(|v| v.minecraft_version == mc_version && v.loader.contains(&mod_loader))
-    {
+    if let Some(mod_version) = mod_versions.iter().find(|v| {
+        println!("{} {:?}", v.minecraft_version, v.loader);
+        return (v.minecraft_version.contains(mc_version)
+            || v.minecraft_version
+                .contains(&format!("{}{}", mc_version, ",")))
+            && v.loader.contains(&mod_loader);
+    }) {
         let response = reqwest::get(&mod_version.download_url)
             .await
             .map_err(|err| Error::new(ErrorKind::Other, format!("Request failed: {:?}", err)))?;
